@@ -48,7 +48,6 @@ Resistor* Circuit::search(char* group, double value) {
       if (strncasecmp(&traverse->group, group, 1) == 0)
       {
         found = true;
-        cout << counter << ":" << traverse->group << endl;
         //traverse->quantity++;
         return traverse;
       }
@@ -63,7 +62,6 @@ Resistor* Circuit::search(char* group, double value) {
         if (strncasecmp(&traverse->group, group, 1) == 0) 
         {
           found = true;
-          cout << counter << ":" << traverse->group << endl;
           return traverse;
         }
         traverse = traverse->next;
@@ -75,7 +73,7 @@ Resistor* Circuit::search(char* group, double value) {
   }
   
   
-  
+  return NULL;
 }
 
 void Circuit::add_resistor(Circuit* circuit,char group, int value){
@@ -86,12 +84,27 @@ void Circuit::add_resistor(Circuit* circuit,char group, int value){
   newResistor->quantity = 1;
   newResistor->next = NULL;
 
+  if (head == NULL)
+  {
+    head = newResistor;
+  }
+  
+
+  Resistor* predecessor = Circuit::head;
   Resistor* ptr = Circuit::head;
   while (ptr->next != NULL && ptr->group < newResistor->group) {
+    predecessor = ptr;
     ptr = ptr->next;
   }
 
-  ptr->next = newResistor;
+  if (ptr->group < newResistor->group)
+  {
+    ptr->next = newResistor;
+  } else if (ptr->group > newResistor->group) {
+    newResistor->next = ptr;
+    predecessor->next = newResistor;
+  }
+  
   
   
 
@@ -138,8 +151,69 @@ void Circuit::delete_resistor(char group){
 
 void Circuit::circuit_info(){
   //circuit infoya başla
+  Resistor* traverse = head;
+  Resistor* predecessor;
+  Resistor* infoTraverse;
+  Resistor* infoList = new Resistor;
+  Circuit* infoCircuit = new Circuit;
+  infoCircuit->head = NULL;
+
+  while (traverse)
+  {
+    Resistor* newResistor = new Resistor;
+    infoTraverse = infoCircuit->head;
+    predecessor = NULL;
+
+    newResistor->value = traverse->value;
+    newResistor->quantity = traverse->quantity;
+    newResistor->group = traverse->group;
+    newResistor->next = NULL;
+
+    if (infoCircuit->head == NULL)
+    {
+      predecessor = newResistor;
+      traverse = traverse->next;
+      infoCircuit->head = newResistor;
+      continue;
+    }
+    
+    while (infoTraverse->next != NULL && infoTraverse->value < newResistor->value) {
+        predecessor = infoTraverse;
+        infoTraverse = infoTraverse->next;
+
+      } 
+
+      if (infoTraverse->value < newResistor->value)
+      {
+        infoTraverse->next = newResistor;
+      } else if ( infoTraverse->value > newResistor->value) {
+        newResistor->next = infoTraverse;
+        if (predecessor == NULL)
+        {
+          infoCircuit->head = newResistor;
+        } else {
+          predecessor->next = newResistor;
+        }
+        
+      }
+
+    traverse = traverse->next;
+  }
+  //print infoCircuit
+  infoTraverse = infoCircuit->head;
+  float totalResistance = 0;
+  while (infoTraverse)
+  {
+    cout << infoTraverse->value << ":" << infoTraverse->quantity << endl;
+    totalResistance = totalResistance + (infoTraverse->value / infoTraverse->quantity);
+    infoTraverse = infoTraverse->next;
+  }
+  cout << "Total Resistance=" << totalResistance << " ohm" << endl;
+  
+    
 
 }
+  
 
 void Circuit::clear(){
 
@@ -153,6 +227,7 @@ int main(){
   Circuit *circuit = new Circuit;
   circuit->create();
 
+/*
   Resistor *resistor1 = new Resistor;
   char testGroup[] = "A";
   resistor1->group = *testGroup;
@@ -160,6 +235,7 @@ int main(){
   resistor1->quantity = 1;
   resistor1->next = NULL;
   circuit->head = resistor1;
+  /*
 
   /*fstream circuitInput;
   circuitInput.open("input.txt");
@@ -190,7 +266,7 @@ int main(){
   double value;
   while (circuitFile >> group >> value)
   {
-    cout << group << value << endl;
+    cout << group << " " << value << endl;
     
     if (value > 0)
     {
