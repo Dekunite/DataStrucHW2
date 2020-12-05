@@ -37,7 +37,7 @@ Resistor* Circuit::search(char* group, float value) {
 
   Resistor* traverse;
   int counter = 0;
-  bool found = false;
+  //bool found = false;
   traverse = head;
 
   if (value > 0)
@@ -47,7 +47,7 @@ Resistor* Circuit::search(char* group, float value) {
       counter++;
       if (strncasecmp(&traverse->group, group, 1) == 0)
       {
-        found = true;
+        //found = true;
         //traverse->quantity++;
         return traverse;
       }
@@ -61,7 +61,7 @@ Resistor* Circuit::search(char* group, float value) {
         counter++;
         if (strncasecmp(&traverse->group, group, 1) == 0) 
         {
-          found = true;
+          //found = true;
           return traverse;
         }
         traverse = traverse->next;
@@ -154,9 +154,10 @@ void Circuit::circuit_info(){
   Resistor* traverse = head;
   Resistor* predecessor;
   Resistor* infoTraverse;
-  Resistor* infoList = new Resistor;
   Circuit* infoCircuit = new Circuit;
   infoCircuit->head = NULL;
+
+  float totalResistance = 0;
 
   while (traverse)
   {
@@ -169,11 +170,11 @@ void Circuit::circuit_info(){
     newResistor->group = traverse->group;
     newResistor->next = NULL;
 
-    if (infoCircuit->head == NULL)
+    if (infoTraverse == NULL)
     {
-      predecessor = newResistor;
       traverse = traverse->next;
       infoCircuit->head = newResistor;
+      totalResistance = totalResistance + (newResistor->value / newResistor->quantity);
       continue;
     }
     
@@ -186,6 +187,7 @@ void Circuit::circuit_info(){
       if (infoTraverse->value < newResistor->value)
       {
         infoTraverse->next = newResistor;
+        totalResistance = totalResistance + (newResistor->value / newResistor->quantity);
       } else if ( infoTraverse->value > newResistor->value) {
         newResistor->next = infoTraverse;
         if (predecessor == NULL)
@@ -194,21 +196,22 @@ void Circuit::circuit_info(){
         } else {
           predecessor->next = newResistor;
         }
-        
+        totalResistance = totalResistance + (newResistor->value / newResistor->quantity);
+      } else if (infoTraverse->value == newResistor->value) {
+        infoTraverse->quantity++;
+        totalResistance = totalResistance + (newResistor->value / newResistor->quantity);
       }
 
     traverse = traverse->next;
   }
   //print infoCircuit
   infoTraverse = infoCircuit->head;
-  float totalResistance = 0;
   while (infoTraverse)
   {
     cout << infoTraverse->value << ":" << infoTraverse->quantity << endl;
-    totalResistance = totalResistance + (infoTraverse->value / infoTraverse->quantity);
     infoTraverse = infoTraverse->next;
   }
-  cout << "Total Resistance=" << totalResistance << " ohm" << endl;
+  cout << "Total resistance=" << totalResistance << " ohm" << endl;
   
     
 
@@ -253,7 +256,6 @@ int main(){
   */
   
   
-  int i = 0;
   char group;
   float value;
   while (circuitFile >> group >> value)
@@ -304,7 +306,6 @@ int main(){
     
     
   }
-  cout << "no while";
   
   
   
@@ -314,7 +315,7 @@ int main(){
   
   
 
-  return 1;
+  return 0;
 }
 
 
