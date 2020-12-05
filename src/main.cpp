@@ -224,13 +224,28 @@ void Circuit::circuit_info(){
   }
   cout << "Total resistance=" << totalResistance << " ohm" << endl;
   
+  Resistor* deletePtr;
+  while (infoCircuit->head)
+  {
+    deletePtr = infoCircuit->head;
+    infoCircuit->head = infoCircuit->head->next;
+    delete deletePtr;
+  }
     
 
 }
   
 
 void Circuit::clear(){
+  Resistor* traverse;
 
+  while (head)
+  {
+    traverse = head;
+    head = head->next;
+    delete traverse;
+  }
+  
 }
 
 
@@ -289,8 +304,9 @@ int main(){
       circuit->circuit_info();
     }
     
-    
   }
+
+  circuit->clear();
   
   return 0;
 }
