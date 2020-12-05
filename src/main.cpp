@@ -36,15 +36,12 @@ void Circuit::create(){
 Resistor* Circuit::search(char* group, float value) {
 
   Resistor* traverse;
-  int counter = 0;
-  //bool found = false;
   traverse = head;
 
   if (value > 0)
   {
     while (traverse)
     {
-      counter++;
       if (strncasecmp(&traverse->group, group, 1) == 0)
       {
         //found = true;
@@ -58,7 +55,6 @@ Resistor* Circuit::search(char* group, float value) {
 
       while (traverse) {
 
-        counter++;
         if (strncasecmp(&traverse->group, group, 1) == 0) 
         {
           //found = true;
@@ -90,7 +86,7 @@ void Circuit::add_resistor(Circuit* circuit,char group, float value){
   }
   
 
-  Resistor* predecessor = Circuit::head;
+  Resistor* predecessor = NULL;
   Resistor* ptr = Circuit::head;
   while (ptr->next != NULL && ptr->group < newResistor->group) {
     predecessor = ptr;
@@ -102,7 +98,12 @@ void Circuit::add_resistor(Circuit* circuit,char group, float value){
     ptr->next = newResistor;
   } else if (ptr->group > newResistor->group) {
     newResistor->next = ptr;
-    predecessor->next = newResistor;
+    if (predecessor == NULL)
+        {
+          Circuit::head = newResistor;
+        } else {
+          predecessor->next = newResistor;
+        }
   }
   
   
@@ -116,7 +117,7 @@ int Circuit::remove_resistor(char group, float value){
   Resistor* ptr = Circuit::head;
   int needsDeletion = 0;
 
-  while (ptr->next != NULL && !(ptr->group == group) && !(ptr->value == value))
+  while (ptr->next != NULL && !(ptr->group == group) ) //&& !(ptr->value == value)
   {
     ptr = ptr->next;
   }
@@ -133,7 +134,7 @@ int Circuit::remove_resistor(char group, float value){
 
 void Circuit::delete_resistor(char group){
 
-  Resistor* predecessor;
+  Resistor* predecessor = NULL;
   Resistor* ptr = Circuit::head;
 
   while (ptr->next != NULL && !(ptr->group == group))
@@ -142,11 +143,16 @@ void Circuit::delete_resistor(char group){
     ptr = ptr->next;
   }
 
-  predecessor->next = ptr->next;
+  if (predecessor == NULL)
+  {
+    Circuit::head = ptr->next;
+  } else
+  {
+    predecessor->next = ptr->next;
+  }
+
   delete ptr;
 
-
-   
 }
 
 void Circuit::circuit_info(){
@@ -181,24 +187,29 @@ void Circuit::circuit_info(){
     while (infoTraverse->next != NULL && infoTraverse->value < newResistor->value) {
         predecessor = infoTraverse;
         infoTraverse = infoTraverse->next;
-
       } 
 
-      if (infoTraverse->value < newResistor->value)
-      {
+      if (infoTraverse->value < newResistor->value) {
+
         infoTraverse->next = newResistor;
         totalResistance = totalResistance + (newResistor->value / newResistor->quantity);
-      } else if ( infoTraverse->value > newResistor->value) {
+
+      } 
+      else if ( infoTraverse->value > newResistor->value) {
+
         newResistor->next = infoTraverse;
-        if (predecessor == NULL)
-        {
+        if (predecessor == NULL) {
           infoCircuit->head = newResistor;
-        } else {
+        } 
+        else {
           predecessor->next = newResistor;
         }
         totalResistance = totalResistance + (newResistor->value / newResistor->quantity);
-      } else if (infoTraverse->value == newResistor->value) {
-        infoTraverse->quantity++;
+
+      } 
+      else if (infoTraverse->value == newResistor->value) {
+
+        infoTraverse->quantity = infoTraverse->quantity + newResistor->quantity;
         totalResistance = totalResistance + (newResistor->value / newResistor->quantity);
       }
 
@@ -229,33 +240,7 @@ int main(){
 
   Circuit *circuit = new Circuit;
   circuit->create();
-
-  
-
-  /*fstream circuitInput;
-  circuitInput.open("input.txt");
-  circuitInput.open("input.txt", fstream::in | fstream::binary);
-  if (!circuitInput.is_open())
-	{
-		circuitInput.open("input.txt", fstream::out | fstream::binary);
-		if (!circuitInput.is_open())
-		{
-			cerr << "Cannot open file";
-			exit(1);
-		}
-	}
-  else{
-
-    circuitInput >> group >> value;
-    //while (!circuitInput.eof())
-    //{
-    //cout << *group << &value;
-    //}
-    
-  }
-  */
-  
-  
+   
   char group;
   float value;
   while (circuitFile >> group >> value)
@@ -307,14 +292,6 @@ int main(){
     
   }
   
-  
-  
-    
-    
-  
-  
-  
-
   return 0;
 }
 
