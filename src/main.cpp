@@ -1,6 +1,6 @@
 /* @Author
-Student Name: <Muhammet Derviş Kopuz>
-Student ID : <504201531>
+Student Name: Muhammet Derviş Kopuz
+Student ID : 504201531
 Date: <date> */
 #include <iostream>
 #include <stdlib.h>
@@ -251,14 +251,28 @@ void Circuit::clear(){
 
 int main(){
 
-  ifstream circuitFile("input.txt");
+  //ifstream circuitFile("input.txt");
+  std::fstream inputFile;
+  inputFile.open("input.txt", fstream::in|fstream::binary);
+  if (!inputFile.is_open())
+  {
+    inputFile.open("input.txt", fstream::out|fstream::binary);
+    if (!inputFile.is_open())
+    {
+      cerr << "Cannot open file";
+      exit(1);
+    }
+    
+  }
+  
 
   Circuit *circuit = new Circuit;
   circuit->create();
    
   char group;
   float value;
-  while (circuitFile >> group >> value)
+  //while (circuitFile >> group >> value)
+  while (inputFile >> group >> value)
   {
     //cout << group << " " << value << endl;
     
@@ -306,8 +320,8 @@ int main(){
     
   }
 
+  inputFile.close();
   circuit->clear();
-  
   return 0;
 }
 
