@@ -13,7 +13,7 @@ Date: <08/12/2020> */
 using namespace std;
 struct Resistor{
   char group;
-  float value;
+  double value;
   int quantity;
   Resistor *next;
 };
@@ -21,9 +21,9 @@ struct Resistor{
 struct Circuit{
   Resistor *head;
   void create();
-  Resistor* search(char*, float);
-  void add_resistor(Circuit*, char, float);
-  int remove_resistor(char, float);
+  Resistor* search(char*, double);
+  void add_resistor(Circuit*, char, double);
+  int remove_resistor(char, double);
   void delete_resistor(char);
   void circuit_info();
   void clear();
@@ -33,7 +33,7 @@ void Circuit::create(){
   head = NULL;
 }
 
-Resistor* Circuit::search(char* group, float value) {
+Resistor* Circuit::search(char* group, double value) {
 
   Resistor* traverse;
   traverse = head;
@@ -69,7 +69,7 @@ Resistor* Circuit::search(char* group, float value) {
   return NULL;
 }
 
-void Circuit::add_resistor(Circuit* circuit,char group, float value){
+void Circuit::add_resistor(Circuit* circuit,char group, double value){
   Resistor *newResistor = new Resistor;
   
   newResistor->group = group;
@@ -109,7 +109,7 @@ void Circuit::add_resistor(Circuit* circuit,char group, float value){
   //prev resistors next should point to newResistor
 }
 
-int Circuit::remove_resistor(char group, float value){
+int Circuit::remove_resistor(char group, double value){
 
   Resistor* ptr = Circuit::head;
   int needsDeletion = 0;
@@ -160,7 +160,7 @@ void Circuit::circuit_info(){
   Circuit* infoCircuit = new Circuit;
   infoCircuit->head = NULL;
 
-  float totalResistance = 0;
+  double totalResistance = 0;
 
   while (traverse)
   {
@@ -267,7 +267,7 @@ int main(){
   circuit->create();
    
   char group;
-  float value;
+  double value;
   //while (circuitFile >> group >> value)
   while (inputFile >> group >> value)
   {
