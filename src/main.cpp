@@ -1,7 +1,7 @@
 /* @Author
 Student Name: Muhammet Derviş Kopuz
 Student ID : 504201531
-Date: <date> */
+Date: <08/12/2020> */
 #include <iostream>
 #include <stdlib.h>
 #include <strings.h>
@@ -63,9 +63,6 @@ Resistor* Circuit::search(char* group, float value) {
         traverse = traverse->next;
       }
       return NULL;
-  } else  //value = 0
-  {
-    
   }
   
   
