@@ -1,11 +1,10 @@
 /* @Author
-Student Name: Muhammet Derviş Kopuz
-Student ID : 504201531
-Date: <08/12/2020> */
+Student Name: <Muhammet Derviş Kopuz>
+Student ID : <504201531>
+Date: <09/12/2020> */
 #include <iostream>
 #include <stdlib.h>
 #include <strings.h>
-#include <string.h>
 
 #include <fstream>
 
@@ -44,8 +43,6 @@ Resistor* Circuit::search(char* group, double value) {
     {
       if (strncasecmp(&traverse->group, group, 1) == 0)
       {
-        //found = true;
-        //traverse->quantity++;
         return traverse;
       }
       traverse = traverse->next;
@@ -57,7 +54,6 @@ Resistor* Circuit::search(char* group, double value) {
 
         if (strncasecmp(&traverse->group, group, 1) == 0) 
         {
-          //found = true;
           return traverse;
         }
         traverse = traverse->next;
@@ -103,10 +99,6 @@ void Circuit::add_resistor(Circuit* circuit,char group, double value){
         }
   }
   
-  
-  
-
-  //prev resistors next should point to newResistor
 }
 
 int Circuit::remove_resistor(char group, double value){
@@ -248,7 +240,6 @@ void Circuit::clear(){
 
 int main(){
 
-  //ifstream circuitFile("input.txt");
   std::fstream inputFile;
   inputFile.open("input.txt", fstream::in|fstream::binary);
   if (!inputFile.is_open())
@@ -268,10 +259,8 @@ int main(){
    
   char group;
   double value;
-  //while (circuitFile >> group >> value)
   while (inputFile >> group >> value)
   {
-    //cout << group << " " << value << endl;
     
     if (value > 0)
     {
